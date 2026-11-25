@@ -1,11 +1,5 @@
 
 
-// ============================================================
-// TUGAS BESAR STRUKTUR DATA - MULTI LINKED LIST (LIST TO LIST)
-// Studi Kasus: Anime Convention & Cosplay Competition
-// Parent : Kompetisi (tema, kategori, lokasi)
-// Child  : Peserta   (nama, karakterCosplay, skorPenilaian)
-// ============================================================
 #include <cctype>
 #include <iostream>
 #include <string>
@@ -13,7 +7,6 @@
 #include <iomanip>
 using namespace std;
 
-// ======================== ADT ========================
 struct Peserta {
     string nama;
     string karakterCosplay;
@@ -25,15 +18,14 @@ struct Kompetisi {
     string tema;
     string kategori;
     string lokasi;
-    Peserta* firstChild;   // kepala child list milik kompetisi ini
-    Kompetisi* next;       // kompetisi berikutnya pada parent list
+    Peserta* firstChild;  
+    Kompetisi* next;       
 };
 
 struct ListMLL {
     Kompetisi* firstParent;
 };
 
-// ======================== UTIL ========================
 void initList(ListMLL& L) { L.firstParent = nullptr; }
 
 string toLower(string s) {
@@ -81,7 +73,6 @@ int bacaInt(const string& prompt) {
     }
 }
 
-// ======================== PARENT LIST ========================
 Kompetisi* createParent(const string& tema, const string& kategori, const string& lokasi) {
     Kompetisi* p = new Kompetisi;
     p->tema = tema;
@@ -101,7 +92,6 @@ Kompetisi* findParent(const ListMLL& L, const string& tema) {
     return nullptr;
 }
 
-// insert last; menolak tema duplikat (kunci unik = tema)
 bool insertParent(ListMLL& L, Kompetisi* p) {
     if (findParent(L, p->tema) != nullptr) return false;
     if (L.firstParent == nullptr) {
@@ -114,7 +104,6 @@ bool insertParent(ListMLL& L, Kompetisi* p) {
     return true;
 }
 
-// bebaskan seluruh child milik sebuah parent (anti memory leak)
 int hapusSemuaChild(Kompetisi* parent) {
     int n = 0;
     Peserta* cur = parent->firstChild;
@@ -129,16 +118,16 @@ int hapusSemuaChild(Kompetisi* parent) {
 }
 
 bool deleteParent(ListMLL& L, const string& tema) {
-    if (L.firstParent == nullptr) return false;       // list kosong
+    if (L.firstParent == nullptr) return false;       
     Kompetisi* prev = nullptr;
     Kompetisi* cur = L.firstParent;
     while (cur != nullptr && !sama(cur->tema, tema)) {
         prev = cur;
         cur = cur->next;
     }
-    if (cur == nullptr) return false;                 // tidak ditemukan
-    if (prev == nullptr) L.firstParent = cur->next;   // hapus head
-    else prev->next = cur->next;                      // hapus tengah / tail
+    if (cur == nullptr) return false;                 
+    if (prev == nullptr) L.firstParent = cur->next;   
+    else prev->next = cur->next;                      
     int n = hapusSemuaChild(cur);
     cout << "  (" << n << " peserta ikut terhapus)\n";
     delete cur;
@@ -158,7 +147,6 @@ void printParent(const ListMLL& L) {
     }
 }
 
-// ======================== CHILD LIST ========================
 Peserta* createChild(const string& nama, const string& karakter, double skor) {
     Peserta* c = new Peserta;
     c->nama = nama;
@@ -178,7 +166,6 @@ Peserta* findChild(const Kompetisi* parent, const string& nama) {
     return nullptr;
 }
 
-// Cari berdasarkan karakter cosplay (kriteria tambahan)
 Peserta* findChildByKarakter(const Kompetisi* parent, const string& karakter) {
     if (parent == nullptr) return nullptr;
     Peserta* cur = parent->firstChild;
@@ -189,7 +176,6 @@ Peserta* findChildByKarakter(const Kompetisi* parent, const string& karakter) {
     return nullptr;
 }
 
-// insert last; nama unik dalam satu kompetisi
 bool insertChild(Kompetisi* parent, Peserta* c) {
     if (parent == nullptr) return false;
     if (findChild(parent, c->nama) != nullptr) return false;
@@ -212,8 +198,8 @@ bool deleteChild(Kompetisi* parent, const string& nama) {
         cur = cur->next;
     }
     if (cur == nullptr) return false;
-    if (prev == nullptr) parent->firstChild = cur->next;  // hapus head
-    else prev->next = cur->next;                          // hapus tengah / tail
+    if (prev == nullptr) parent->firstChild = cur->next;  
+    else prev->next = cur->next;                          
     delete cur;
     return true;
 }
@@ -232,7 +218,6 @@ void printChild(const Kompetisi* parent) {
     }
 }
 
-// ======================== TRAVERSAL ========================
 void printAll(const ListMLL& L) {
     if (L.firstParent == nullptr) {
         cout << "  Belum ada kompetisi terdaftar.\n";
@@ -246,7 +231,6 @@ void printAll(const ListMLL& L) {
     }
 }
 
-// ======================== FITUR TAMBAHAN ========================
 int countChild(const Kompetisi* parent) {
     int n = 0;
     if (parent == nullptr) return 0;
@@ -276,7 +260,6 @@ void printStatistik(const ListMLL& L) {
     }
 }
 
-// ======================== DEALOKASI SEMUA ========================
 void destroyAll(ListMLL& L) {
     while (L.firstParent != nullptr) {
         Kompetisi* del = L.firstParent;
@@ -286,7 +269,6 @@ void destroyAll(ListMLL& L) {
     }
 }
 
-// ======================== HANDLER MENU ========================
 void menuTambahParent(ListMLL& L) {
     string tema = bacaString("  Tema     : ");
     string kat  = bacaString("  Kategori : ");
@@ -363,7 +345,6 @@ void menuPrintChild(ListMLL& L) {
     printChild(p);
 }
 
-// ======================== DEMO 8 SKENARIO ========================
 void garis(const string& judul) {
     cout << "\n========== " << judul << " ==========\n";
 }
