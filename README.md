@@ -1,1 +1,0 @@
-# Anime-Convention-And-Cosplay-Competition
